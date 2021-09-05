@@ -16,7 +16,7 @@ You can install the development version of jra from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("ghwang-nk/jra")
+devtools::install_github("ghwang-nk/jra", build_vignettes = TRUE)
 ```
 
 ## Example
@@ -26,5 +26,4 @@ A demo example is provided in the vignette, which is available with:
 ``` r
 library(jra)
 browseVignettes(package = "jra")
-#> No vignettes found by browseVignettes(package = "jra")
 ```
