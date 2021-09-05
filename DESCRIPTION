@@ -1,15 +1,35 @@
 Package: jra
-Title: What the Package Does (One Line, Title Case)
+Title: Determination of the number of jumps in 1-D jump regression analysis
 Version: 0.0.0.9000
 Authors@R: 
+    c(
     person(given = "Guanghui",
            family = "Wang",
            role = c("aut", "cre"),
-           email = "ghwang.nk@gmail.com")
-Description: What the package does (one paragraph).
-License: MIT + file LICENSE
+           email = "ghwang.nk@gmail.com"),
+    person(given = "Changliang",
+           family = "Zou",
+           role = "aut",
+           email = "nk.chlzou@gmail.com"),
+    person(given = "Peihua",
+           family = "Qiu",
+           role = "aut",
+           email = "pqiu@ufl.edu")
+    )
+Description: Implements the COPS and SOPS methods for the determination of the number of jumps in 1-D jump.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 URL: https://github.com/ghwang-nk/jra
 BugReports: https://github.com/ghwang-nk/jra/issues
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+Imports: 
+    Rcpp
+Suggests: 
+    rmarkdown,
+    knitr,
+    tidyverse
+VignetteBuilder: knitr

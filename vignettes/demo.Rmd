@@ -1,0 +1,93 @@
+---
+title: "A guide to jra"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 6,
+  fig.asp = 0.618,
+  out.width = "70%",
+  fig.align = "center",
+  fig.retina = 3
+)
+```
+
+```{r}
+library(jra)
+```
+
+## The COPS* & SOPS* procedures
+
+#### Prepare the data
+```{r}
+rm(list = ls())
+set.seed(2021)
+
+n <- 2000
+X <- runif(n)
+# Continuity part of the regression function
+fC <- sin(4 * pi * (X + 0.2)) / (X + 0.2)
+K <- 6  # true number of jumps
+print("Jumps are located at:")
+(jump_loc <- 1 / (K + 1) * (1:K))
+print("with sizes:")
+(jump_size <- rep(1, K))
+# Add jump part to continuity part
+jump_loc_ext <- c(0, jump_loc, 1)
+len_seg <- c(jump_loc, 1) - c(0, jump_loc)
+f <- fC
+cum_jump_size <- 0
+for (j in 2:(K + 1)) {
+  index <- X > jump_loc_ext[j] & X <= jump_loc_ext[j + 1]
+  cum_jump_size <- cum_jump_size + jump_size[j - 1]
+  f[index] <- f[index] + cum_jump_size
+}
+ep <- rnorm(n)  # noises
+sig <- 0.2
+Y <- f + sig * ep
+```
+
+#### Scatter plot with true jumps (in red)
+```{r}
+library(tidyverse)
+dat <- tibble(Y = Y, X = X)
+p1 <- dat %>%
+  ggplot() +
+  geom_point(aes(X, Y), color = "#5e5e5e", size = 0.5) +
+  geom_vline(xintercept = jump_loc, color = "#ff634e", lty = 3, size = 1)
+p1
+```
+
+#### Jump detection by the COPS* procedure and add the detected jumps to the scatter plot (in blue)
+```{r}
+res <- COPS(X, Y)
+res$number
+res$locations
+res$sizes
+p1 +
+  geom_vline(xintercept = res$locations, color = "#03a1ff", lty = 1)
+```
+
+#### Jump detection by the SOPS* procedure and add the detected jumps to the scatter plot (in green)
+```{r}
+res <- SOPS(X, Y)
+res$number
+res$locations  # locations
+res$sizes  # magnitudes
+p1 +
+  geom_vline(xintercept = res$locations, color = "#01a99d", lty = 1)
+```
